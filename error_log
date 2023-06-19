@@ -1,0 +1,18 @@
+[14-Dec-2022 17:00:07 UTC] PHP Deprecated:  Optional parameter $level declared before required parameter $message is implicitly treated as a required parameter in /home/buge5123/public_html/cbt/system/core/Common.php on line 348
+[15-Dec-2022 00:00:07 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: filter_var(): Argument #3 ($options) must be of type array|int, string given in /home/buge5123/public_html/cbt/system/core/Input.php:392
+Stack trace:
+#0 /home/buge5123/public_html/cbt/system/core/Input.php(392): filter_var('153.92.11.1', 275, '')
+#1 /home/buge5123/public_html/cbt/system/core/Input.php(355): CI_Input->valid_ip('153.92.11.1')
+#2 /home/buge5123/public_html/cbt/system/libraries/Session.php(331): CI_Input->ip_address()
+#3 /home/buge5123/public_html/cbt/system/libraries/Session.php(109): CI_Session->sess_create()
+#4 /home/buge5123/public_html/cbt/system/core/Loader.php(1100): CI_Session->__construct()
+#5 /home/buge5123/public_html/cbt/system/core/Loader.php(976): CI_Loader->_ci_init_class('session', '', NULL, NULL)
+#6 /home/buge5123/public_html/cbt/system/core/Loader.php(217): CI_Loader->_ci_load_class('Session', NULL, NULL)
+#7 /home/buge5123/public_html/cbt/system/core/Loader.php(1179): CI_Loader->library('session')
+#8 /home/buge5123/public_html/cbt/system/core/Loader.php(153): CI_Loader->_ci_autoloader()
+#9 /home/buge5123/public_html/cbt/system/core/Controller.php(52): CI_Loader->initialize()
+#10 /home/buge5123/public_html/cbt/application/controllers/adm.php(7): CI_Controller->__construct()
+#11 /home/buge5123/public_html/cbt/system/core/CodeIgniter.php(309): Adm->__construct()
+#12 /home/buge5123/public_html/cbt/index.php(202): require_once('/home/buge5123/...')
+#13 {main}
+  thrown in /home/buge5123/public_html/cbt/system/core/Input.php on line 392
