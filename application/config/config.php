@@ -1,10 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
-    $protocol = "https://";
-}
-$root = $protocol . $_SERVER['HTTP_HOST'];
-$root .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
+
+$protocol = "http://";
+$root = "http://localhost/cbt/";
 $pc_root = explode("/", $root);
 $uri_js = count($pc_root) - 2;
 $config['jml_opsi']             = 4;                //isi dengan pilihan opsi jawaban, HARUS <= 5
@@ -18,58 +15,6 @@ $config['nama_sekolah']         = "SMP Terpadu Bugelan"; //isi sesuai kebutuhan 
 $config['nama_ujian']           = "Asesmen Sumatif Akhir Jenjang (ASAJ)"; //isi sesuai kebutuhan jenis ujian
 $config['nama_kepala']          = "Asep Irfan Helmi, ST."; //isi sesuai nama kepala
 $config['nip_kepala']           = "-"; //isi sesuai nama kepala
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
