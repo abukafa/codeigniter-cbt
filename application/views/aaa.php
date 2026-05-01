@@ -47,8 +47,8 @@
             </div>
          </div>
       </nav>
-      <?php echo gen_menu(); ?>
-      <?php echo $this->load->view($p); ?>
+      <?php gen_menu(); ?>
+      <?php $this->load->view($p); ?>
    </div>
    <div class="col-md-12 footer" style="background-color: #0B6623; color: #fff;">
       <b><?php echo $this->config->item('nama_sekolah') . " - " . $this->config->item('nama_aplikasi') . " - " . $this->config->item('versi') . "<br> WAKTU SERVER: " . tjs(date('Y-m-d H:i:s'), "s") . " - WAKTU DATABASE: " . tjs($this->waktu_sql, "s"); ?>.</b>
