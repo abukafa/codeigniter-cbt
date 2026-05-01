@@ -1,5 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-$root = "https://" . $_SERVER['HTTP_HOST'];
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+$root = $protocol . $_SERVER['HTTP_HOST'];
 $root .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
 $pc_root = explode("/", $root);
 $uri_js = count($pc_root) - 2;
@@ -8,10 +9,10 @@ $config['uri_js']               = $uri_js;
 $config['editor_style']         = "replace";        //pilihannya "inline" atau "replace";
 $config['nama_aplikasi']        = "CBT";       //isi sesuai kebutuhan nama pada header
 $config['versi']                = "3.0";           //isi sesuai kebutuhan nama pada header
-$config['tgl']                  = "Kawalu, 1 Juli 2022";
+$config['tgl']                  = "Kawalu, 4 Mei 2026";
 $config['tampil_nilai']         = FALSE;            // jika siswa boleh melihat hasil ujian, isikan TRUE, jika tidak FALSE, default TRUE
-$config['nama_sekolah']         = "SMPT Bugelan"; //isi sesuai kebutuhan nama sekolah
-$config['nama_ujian']           = "Ujian Sekolah"; //isi sesuai kebutuhan jenis ujian
+$config['nama_sekolah']         = "SMP Terpadu Bugelan"; //isi sesuai kebutuhan nama sekolah
+$config['nama_ujian']           = "Asesmen Sumatif Akhir Jenjang (ASAJ)"; //isi sesuai kebutuhan jenis ujian
 $config['nama_kepala']          = "Asep Irfan Helmi, ST."; //isi sesuai nama kepala
 $config['nip_kepala']           = "-"; //isi sesuai nama kepala
 

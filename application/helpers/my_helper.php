@@ -192,13 +192,13 @@ function gen_menu()
 		);
 	} else if ($sess_level == "admin") {
 		$menu = array(
-			array("icon" => "retweet", "url" => "", "text" => "HOME"),
 			array("icon" => "user", "url" => "m_siswa", "text" => "DATA SISWA"),
 			array("icon" => "blackboard", "url" => "m_guru", "text" => "DATA GURU"),
 			array("icon" => "list", "url" => "m_kelas", "text" => "KELAS"),
 			array("icon" => "compressed", "url" => "m_jurusan", "text" => "JURUSAN"),
 			array("icon" => "tasks", "url" => "m_mapel", "text" => "MAPEL"),
 			array("icon" => "folder-close", "url" => "m_soal", "text" => "BANK SOAL"),
+			array("icon" => "briefcase", "url" => "m_ujian", "text" => "UJIAN"),
 			array("icon" => "file", "url" => "h_ujian", "text" => "HASIL UJIAN"),
 			array("icon" => "print", "url" => "m_cetak_kartu", "text" => "CETAK KARTU"),
 		);
