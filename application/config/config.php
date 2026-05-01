@@ -1,4 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 $protocol = "http://";
 $root = "http://localhost/cbt/";
 $pc_root = explode("/", $root);
