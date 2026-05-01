@@ -68,17 +68,17 @@ class Adm extends CI_Controller
 			$pdf->Cell(89.8, 2, '', 0, 0);
 			$pdf->Cell(0.1, 2, '', 1, 1);
 
-			$pdf->SetFont('Arial', 'B', 10);
+			$pdf->SetFont('Arial', 'B', 8);
 			$pdf->Cell(0.1, 3, '', 1, 0);
-			$pdf->Cell(89.8, 3, 'KARTU PESERTA UJIAN', 0, 0, 'C');
-			$pdf->Cell(0.1, 3, '', 1, 1);
-
-			$pdf->Cell(0.1, 3, '', 1, 0);
-			$pdf->Cell(89.8, 3, $nama_sekolah, 0, 0, 'C');
+			$pdf->Cell(89.8, 3, 'K A R T U   P E S E R T A', 0, 0, 'C');
 			$pdf->Cell(0.1, 3, '', 1, 1);
 
 			$pdf->Cell(0.1, 3, '', 1, 0);
 			$pdf->Cell(89.8, 3, $nama_ujian, 0, 0, 'C');
+			$pdf->Cell(0.1, 3, '', 1, 1);
+
+			$pdf->Cell(0.1, 3, '', 1, 0);
+			$pdf->Cell(89.8, 3, $nama_sekolah, 0, 0, 'C');
 			$pdf->Cell(0.1, 3, '', 1, 1);
 
 			$pdf->Cell(0.1, 2, '', 1, 0);
@@ -1182,7 +1182,11 @@ class Adm extends CI_Controller
 		$a['jurusan'] = $this->db->query("SELECT m_jurusan.* FROM m_jurusan ORDER BY jurusan ASC")->result();
 		$a['kelas'] = $this->db->query("SELECT m_kelas.* FROM m_kelas ORDER BY kelas ASC")->result();
 		$a['pola_tes'] = array("" => "Pengacakan Soal", "acak" => "Soal Diacak", "set" => "Soal Diurutkan");
-		$a['p_mapel'] = obj_to_array($this->db->query("SELECT * FROM m_mapel WHERE id IN (SELECT id_mapel FROM tr_guru_mapel WHERE id_guru = '" . $a['sess_konid'] . "')")->result(), "id,nama");
+		if ($a['sess_konid'] == 0) {
+			$a['p_mapel'] = obj_to_array($this->db->query("SELECT * FROM m_mapel ORDER BY nama ASC")->result(), "id,nama");
+		}else{
+			$a['p_mapel'] = obj_to_array($this->db->query("SELECT * FROM m_mapel WHERE id IN (SELECT id_mapel FROM tr_guru_mapel WHERE id_guru = '" . $a['sess_konid'] . "')  ORDER BY nama ASC")->result(), "id,nama");
+		}
 
 		if ($uri3 == "det") {
 			$are = array();
@@ -1227,7 +1231,16 @@ class Adm extends CI_Controller
 			exit();
 		} else if ($uri3 == "simpan") {
 			$ket 	= "";
-			$ambil_data = $this->db->query("SELECT id FROM m_soal WHERE id_mapel = '" . bersih($p, "mapel") . "' AND id_guru = '" . $a['sess_konid'] . "'")->num_rows();
+
+			// Cek apakah admin atau guru untuk menghitung ketersediaan bank soal
+			if ($a['sess_konid'] == 0) {
+				// Jika Admin: Hitung semua soal berdasarkan mapel saja (milik guru siapa pun)
+				$ambil_data = $this->db->query("SELECT id FROM m_soal WHERE id_mapel = '" . bersih($p, "mapel") . "'")->num_rows();
+			} else {
+				// Jika Guru: Hitung soal berdasarkan mapel DAN id_guru yang bersangkutan
+				$ambil_data = $this->db->query("SELECT id FROM m_soal WHERE id_mapel = '" . bersih($p, "mapel") . "' AND id_guru = '" . $a['sess_konid'] . "'")->num_rows();
+			}
+
 			$jml_soal_diminta = intval(bersih($p, "jumlah_soal"));
 			if ($ambil_data < $jml_soal_diminta) {
 				$ret_arr['status'] 	= "gagal";
@@ -1249,9 +1262,17 @@ class Adm extends CI_Controller
 				} else {
 					$ket = "tambah";
 					$token = strtoupper(random_string('alpha', 5));
+					// Tentukan id_guru yang akan disimpan
+					$id_guru_simpan = $a['sess_konid'];
+					
+					// Jika yang membuat jadwal adalah Admin, cari siapa guru pembuat soal mapel tersebut
+					if ($id_guru_simpan == 0) {
+						$cek_guru = $this->db->query("SELECT id_guru FROM m_soal WHERE id_mapel = '" . bersih($p, "mapel") . "' LIMIT 1")->row();
+						$id_guru_simpan = ($cek_guru) ? $cek_guru->id_guru : 0;
+					}
 					$this->db->query("INSERT INTO tr_guru_tes VALUES (
 						null, 
-						'" . $a['sess_konid'] . "', 
+						'" . $id_guru_simpan . "', 
 						'" . bersih($p, "mapel") . "',
 						'" . bersih($p, "nama_ujian") . "', 
 						'" . bersih($p, "jumlah_soal") . "', 
@@ -1280,19 +1301,33 @@ class Adm extends CI_Controller
 			$length = $this->input->post('length');
 			$draw = $this->input->post('draw');
 			$search = $this->input->post('search');
-			$d_total_row = $this->db->query("SELECT a.id
-		        	FROM tr_guru_tes a
-		        	INNER JOIN m_mapel b ON a.id_mapel = b.id 
-		        	WHERE a.id_guru = '" . $a['sess_konid'] . "' 
-                    AND (a.nama_ujian LIKE '%" . $search['value'] . "%' 
-					OR b.nama LIKE '%" . $search['value'] . "%')")->num_rows();
-			$q_datanya = $this->db->query("SELECT a.*, b.nama AS mapel
-												FROM tr_guru_tes a
-									        	INNER JOIN m_mapel b ON a.id_mapel = b.id 
-									        	WHERE a.id_guru = '" . $a['sess_konid'] . "'
-							                    AND (a.nama_ujian LIKE '%" . $search['value'] . "%'
-												OR b.nama LIKE '%" . $search['value'] . "%') 
-		                                        ORDER BY a.id DESC LIMIT " . $start . ", " . $length . "")->result_array();
+			if ($a['sess_konid'] == 0) {
+				$d_total_row = $this->db->query("SELECT a.id
+						FROM tr_guru_tes a
+						INNER JOIN m_mapel b ON a.id_mapel = b.id 
+						WHERE (a.nama_ujian LIKE '%" . $search['value'] . "%' 
+						OR b.nama LIKE '%" . $search['value'] . "%')")->num_rows();
+				$q_datanya = $this->db->query("SELECT a.*, b.nama AS mapel
+						FROM tr_guru_tes a
+						INNER JOIN m_mapel b ON a.id_mapel = b.id 
+						WHERE (a.nama_ujian LIKE '%" . $search['value'] . "%'
+						OR b.nama LIKE '%" . $search['value'] . "%') 
+						ORDER BY a.id DESC LIMIT " . $start . ", " . $length . "")->result_array();
+			}else{
+				$d_total_row = $this->db->query("SELECT a.id
+						FROM tr_guru_tes a
+						INNER JOIN m_mapel b ON a.id_mapel = b.id 
+						WHERE a.id_guru = '" . $a['sess_konid'] . "' 
+						AND (a.nama_ujian LIKE '%" . $search['value'] . "%' 
+						OR b.nama LIKE '%" . $search['value'] . "%')")->num_rows();
+				$q_datanya = $this->db->query("SELECT a.*, b.nama AS mapel
+						FROM tr_guru_tes a
+						INNER JOIN m_mapel b ON a.id_mapel = b.id 
+						WHERE a.id_guru = '" . $a['sess_konid'] . "'
+						AND (a.nama_ujian LIKE '%" . $search['value'] . "%'
+						OR b.nama LIKE '%" . $search['value'] . "%') 
+						ORDER BY a.id DESC LIMIT " . $start . ", " . $length . "")->result_array();
+			}
 			$data = array();
 			$no = ($start + 1);
 			foreach ($q_datanya as $d) {

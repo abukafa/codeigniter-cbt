@@ -1,10 +1,10 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 $active_group 				= 'default';
 $active_record 				= TRUE;
-$db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'buge5123_abukafa';
-$db['default']['password'] = 'margaluyu';
-$db['default']['database'] = 'buge5123_cbt';
+$db['default']['hostname'] = 'localhost:3307';
+$db['default']['username'] = 'root';
+$db['default']['password'] = '';
+$db['default']['database'] = 'bugelan_cbt';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
