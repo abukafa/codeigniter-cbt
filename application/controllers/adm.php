@@ -102,7 +102,7 @@ class Adm extends CI_Controller
 			$pdf->Cell(0.1, 3, '', 1, 0);
 			$pdf->Cell(2.8, 3, '', 0, 0);
 			$pdf->Cell(20, 3, 'KELAS', 0, 0);
-			$pdf->Cell(67, 3, ': ' . $load['jurusan'] . ' ' . $load['id_jurusan'], 0, 0, 'L');
+			$pdf->Cell(67, 3, ': ' . $load['jurusan'], 0, 0, 'L');
 			$pdf->Cell(0.1, 3, '', 1, 1);
 
 			$pdf->Cell(0.1, 2, '', 1, 0);
@@ -358,7 +358,7 @@ class Adm extends CI_Controller
 											(SELECT COUNT(id) FROM m_admin WHERE level = 'siswa' AND kon_id = a.id) AS ada
 											FROM m_siswa a
 											-- INNER JOIN m_jurusan b ON a.id_jurusan = b.id
-	                                        WHERE a.nama LIKE '%" . $search['value'] . "%' ORDER BY a.nama LIMIT " . $start . ", " . $length . "")->result_array();
+	                                        WHERE a.nama LIKE '%" . $search['value'] . "%' ORDER BY a.jurusan LIMIT " . $start . ", " . $length . "")->result_array();
 			$data = array();
 			$no = ($start + 1);
 
@@ -715,7 +715,7 @@ class Adm extends CI_Controller
 			$q_datanya = $this->db->query("SELECT a.*,
 											(SELECT COUNT(id) FROM m_admin WHERE level = 'guru' AND kon_id = a.id) AS ada
 											FROM m_guru a
-	                                        WHERE a.nama LIKE '%" . $search['value'] . "%' ORDER BY a.id LIMIT " . $start . ", " . $length . "")->result_array();
+	                                        WHERE a.nama LIKE '%" . $search['value'] . "%' ORDER BY a.nama LIMIT " . $start . ", " . $length . "")->result_array();
 			$data = array();
 			$no = ($start + 1);
 
@@ -1312,7 +1312,7 @@ class Adm extends CI_Controller
 						INNER JOIN m_mapel b ON a.id_mapel = b.id 
 						WHERE (a.nama_ujian LIKE '%" . $search['value'] . "%'
 						OR b.nama LIKE '%" . $search['value'] . "%') 
-						ORDER BY a.id DESC LIMIT " . $start . ", " . $length . "")->result_array();
+						ORDER BY a.id ASC LIMIT " . $start . ", " . $length . "")->result_array();
 			}else{
 				$d_total_row = $this->db->query("SELECT a.id
 						FROM tr_guru_tes a
